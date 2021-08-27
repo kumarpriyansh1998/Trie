@@ -1,0 +1,76 @@
+class Solution {
+    
+    
+    class Node{
+        Node left = null;
+        Node right = null;
+    }
+    Node root;
+    Solution(){
+        root  = new Node();
+    }
+    
+    
+    
+    public void insert(int num){
+        Node curr = root;
+        for(int i=0;i<31;i++){
+            int mask = 1<<(30-i);
+            int bit = (num&mask)==0?0:1;
+            if(bit==0){
+                if(curr.left==null) curr.left = new Node();
+                curr = curr.left;
+            }else{
+                if(curr.right==null) curr.right = new Node();
+                curr = curr.right;
+            }
+        }
+    }
+    
+    
+    public int find(int num){
+        
+        int ans= 0;
+        Node curr = root;
+        for(int i=0;i<31;i++){
+            int mask = 1<<(30-i);
+            int bit = (num&mask)==0?0:1;
+            if(bit==0){
+                if(curr.left!=null){
+                    curr = curr.left;
+                }else{
+                    ans = ans|mask;
+                    curr = curr.right;
+                }
+                
+            }else{
+                if(curr.right!=null){
+                    curr = curr.right;
+                    ans = ans|mask;
+                    
+                }else{
+                    curr = curr.left;
+                }
+                
+            }
+        }
+        
+        return ans;
+    }
+    
+    
+    
+    public int findMaximumXOR(int[] nums) {
+
+        int max =0;
+        for(int ele:nums) insert(ele);
+        
+        for(int ele:nums){
+            int m = Integer.MAX_VALUE^ele;
+            int val = find(m);
+            max = Math.max(max,val^ele);
+        }
+        return max;
+        
+    }
+}
