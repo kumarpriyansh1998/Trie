@@ -1,0 +1,58 @@
+class MapSum {
+
+    /** Initialize your data structure here. */
+    class Node{
+        Node child[] = new Node[26];
+        int val =0;
+        // isleaf = false;
+    }
+    Node root;
+    HashMap<String,Integer> hmap;
+    public MapSum() {
+        root = new Node();
+        hmap = new HashMap<>();
+        
+    }
+    
+    public void insert(String key, int val) {
+        Node curr = root;
+        int prev = hmap.getOrDefault(key,0);
+        for(int i=0;i<key.length();i++){
+            char ch = key.charAt(i);
+            if(curr.child[ch-'a']==null){
+                Node n = new Node();
+                n.val += val;
+                curr.child[ch-'a'] = n;
+            }else{
+                curr.child[ch-'a'].val += (val-prev);
+                
+            }
+            curr = curr.child[ch-'a'];
+        }
+        // curr.isleaf = true;
+        hmap.put(key,val);
+    }
+    
+    
+    public int sum(String prefix) {
+        Node curr = root;
+        int n = prefix.length();
+        for(int i=0;i<n;i++){
+            char ch = prefix.charAt(i);
+            if(curr.child[ch-'a']!=null){
+                curr = curr.child[ch-'a'];
+            }
+            else return 0;
+        }
+        return curr.val;
+        
+        
+    }
+}
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum obj = new MapSum();
+ * obj.insert(key,val);
+ * int param_2 = obj.sum(prefix);
+ */
