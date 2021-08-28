@@ -1,0 +1,85 @@
+class Solution {
+    
+    public class Node{
+        Node child[] = new Node[26];
+        String str = null;
+    }
+    
+    Node root = new Node();
+    
+    
+    public List<String> findWords(char[][] board, String[] words) {
+        
+        for(String ele:words) add(ele);
+        int r = board.length;
+        int c = board[0].length;
+        HashSet<String> list = new HashSet<>();
+        boolean visited[][] = new boolean[r][c];
+        for(int i=0;i<r;i++){
+            for(int j=0;j<c;j++){
+                if(list.size()<words.length) dfs(i,j,list,visited,root,board);
+            }
+        }
+        
+        
+        List<String> lis = new ArrayList<>(list);
+        return lis;
+        
+    }
+    
+    int dir[][] = {{1,0},{-1,0},{0,1},{0,-1}};
+    
+    
+    public void dfs(int i,int j,HashSet<String> list,boolean visited[][],Node curr,char board[][]){
+        if(isvalid(i,j,visited)==false) return;
+        char ch = board[i][j];
+        if(contains(curr,ch)==false) return;
+        visited[i][j] = true;
+        if(curr.child[ch-'a'].str!=null) {
+            list.add(curr.child[ch-'a'].str);
+        }
+        
+            for(int ele[]:dir){
+                int dx = ele[0];
+                int dy = ele[1];
+                dfs(i+dx,j+dy,list,visited,curr.child[ch-'a'],board);
+            }
+        
+        visited[i][j] = false;
+    }
+    
+    
+    
+    public boolean contains(Node node,char ch){
+        if(node==null) return false;
+        if(node.child[ch-'a']!=null) return true;
+        return false;
+    }
+    
+    
+    public boolean isvalid(int i,int j,boolean visited[][]){
+        int r = visited.length;
+        int c = visited[0].length;
+        if(i<0 || j<0 || i>=r || j>=c) return false;
+        if(visited[i][j]==true) return false;
+        return true;
+    }
+    
+    
+    
+    
+    
+    
+    public void add(String ele){
+        Node curr = root;
+        int n = ele.length();
+        for(int i=0;i<n;i++){
+            char ch = ele.charAt(i);
+            if(curr.child[ch-'a']==null){
+                curr.child[ch-'a'] = new Node();
+            }   
+            curr = curr.child[ch-'a'];
+        }
+        curr.str = ele;
+    }
+}
