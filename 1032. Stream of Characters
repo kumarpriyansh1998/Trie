@@ -1,0 +1,59 @@
+class StreamChecker {
+    
+    
+    class Node{
+        Node child[] = new Node[26];
+        boolean end = false;
+    }
+    
+    Node root = new Node();
+    StringBuilder sb = new StringBuilder();
+    
+    public void addnode(String str){
+        Node curr = root;
+        int n = str.length();
+        for(int i=n-1;i>=0;i--){
+            char ch = str.charAt(i);
+            if(curr.child[ch-'a']==null){
+                curr.child[ch-'a'] = new Node();
+            }
+            
+            
+            curr = curr.child[ch-'a'];
+            
+        }
+        
+        curr.end = true;
+    }
+
+    public StreamChecker(String[] words) {
+        for(String ele:words){
+            addnode(ele);
+        }
+    }
+    
+    public boolean query(char letter) {
+        sb.append(letter);
+        int n = sb.length();
+        Node curr = root;
+        for(int i=n-1;i>=0;i--){
+            char ch = sb.charAt(i);
+            if(curr.child[ch-'a']==null){
+                return false;
+            }else{
+                if(curr.child[ch-'a'].end==true) return true;
+                else curr = curr.child[ch-'a'];
+                
+            }
+        }
+        return false;
+        
+        
+    }
+}
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker obj = new StreamChecker(words);
+ * boolean param_1 = obj.query(letter);
+ */
